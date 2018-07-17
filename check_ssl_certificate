@@ -1,4 +1,12 @@
 #!/usr/bin/python
+# 
+# sslcheck_nagios
+# SSL certificate checking plugin for Nagios
+#
+# by Nick Harvey - nickharvey.net
+# under the MIT license
+#
+# 
 
 import sys, re
 import ssl
