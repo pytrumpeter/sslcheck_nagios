@@ -1,0 +1,65 @@
+#!/usr/bin/python
+
+import sys, re
+import ssl
+import socket
+import argparse
+
+
+from datetime import datetime
+
+# Set this constant to how far in advance to be warned about an expiring cert
+WARNING_DAYS = 30
+
+def do_check(hostname, port):
+    ctx = ssl.create_default_context()
+
+    s = ctx.wrap_socket(socket.socket(), server_hostname=hostname)
+
+    try:
+        s.connect((hostname, port))
+        cert = s.getpeercert()
+    except Exception as e:
+        return (3, 'Error attempting to contact host: {}'.format(e))
+
+    unix_expire = ssl.cert_time_to_seconds(cert['notAfter'])
+
+    diff = datetime.fromtimestamp(unix_expire) - datetime.now()
+
+    if diff.days < 0:
+        return (2, 'CRITICAL: Certificate has EXPIRED')
+
+    if diff.days < WARNING_DAYS:
+        return (1, 'WARNING: Certificate expires in {} days'.format(diff.days))
+
+    return (0, 'OK: Certificate expires in {} days'.format(diff.days))
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description='Check ssl cert on a given host and port.')
+    parser.add_argument('-H', metavar='hostname', help='hostname to check')
+    parser.add_argument('-p', metavar='port', help='port number to check')
+    try:
+        hostname = str(parser.parse_args().H)
+    except TypeError:
+        print('Error: Please enter a valid hostname')
+        sys.exit(3)
+    if hostname == 'None':
+        print('Error: Missing hostname')
+        sys.exit(3)
+    try:
+        port = int(parser.parse_args().p)
+    except TypeError:
+        print('Error: Please enter a valid port number')
+        sys.exit(3)
+
+    exit_code, message = do_check(hostname, port)
+
+    # Nagios will pick up this output and display it along with the status
+    print(message)
+
+    # Exit code contains status (0=OK, 1=WARNING, 2=CRITICAL, 3=UNKNOWN)
+    sys.exit(exit_code)
+
+
