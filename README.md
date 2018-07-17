@@ -19,7 +19,12 @@ define command {
 }
 ```
 
-Now, to use this plugin on a specific host, add a service and use this command, with the following syntax: check_ssl_certificate -H [hostname] -p [port number]
+If you are monitoring a web service, set up $ARG1$ as '443' in the service configuration.  I have not tested with services other than HTTPS but I don't see why it wouldn't work.
+
+The command can be tested at the command line as well.
+
+## Known Issues ##
+Sending an IP address as the hostname argument will likely cause an error.  For this reason, you should use the $HOSTNAME$ variable instead of the $HOSTADDRESS$ variable.  Make sure the host_name directive is correct for your host.  For more information on the Nagios macros, see the Nagios docs [here](https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/3/en/macrolist.html).
 
 ## Contributing
 
