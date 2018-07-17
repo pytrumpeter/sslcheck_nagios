@@ -12,10 +12,12 @@ If you want the warning threshold to be something other than 30, set the WARNING
 
 In Nagios, configure a new command to use the plugin:
 
+```
 define command {
     command_name    check_ssl_certificate
     command_line    $USER1$/check_ssl_certificate -H $HOSTNAME$ -p $ARG1$
 }
+```
 
 Now, to use this plugin on a specific host, add a service and use this command, with the following syntax: check_ssl_certificate -H [hostname] -p [port number]
 
