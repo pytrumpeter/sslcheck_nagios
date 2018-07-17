@@ -1,4 +1,4 @@
-# nagios-sslcert-plugin
+# sslcheck-nagios
 
 This plugin can be used with Nagios to check for a certificate's expiration date.  If the expiration date is approaching and is within a configurable threshold, a warning will be issued.  If the certificate is expired, Nagios will show critical.
 
@@ -12,31 +12,21 @@ If you want the warning threshold to be something other than 30, set the WARNING
 
 In Nagios, configure a new command to use the plugin:
 
-BLAH
+define command {
+    command_name    check_ssl_certificate
+    command_line    $USER1$/check_ssl_certificate -H $HOSTNAME$ -p $ARG1$
+}
 
-Now, to use this plugin on a specific host, add a service and use this command, with the following syntax: check_ssl_cert -H [hostname] -p [port number]
+Now, to use this plugin on a specific host, add a service and use this command, with the following syntax: check_ssl_certificate -H [hostname] -p [port number]
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+Not much to this yet, so by all means, fork it and submit a PR if you like.  I'm pretty much open.
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Nick Harvey** - *Initial work* - James Madison University Libraries
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
-
